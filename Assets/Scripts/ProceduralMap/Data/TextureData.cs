@@ -1,12 +1,21 @@
 using UnityEngine;
 
+[CreateAssetMenu()]
 public class TextureData : UpdatableData
 {
+    float savedMinHeight;
+    float savedMaxHeight;
+
     public void ApplyToMaterial(Material material)
     {
-        material.SetColor("backgroundColour", baseColour);
-        material.SetColor("lightColour", lightColour);
-        material.SetColor("darkColour", darkColour);
+        UpdateMeshHeights(material, savedMinHeight, savedMaxHeight);
+    }
+
+    public void UpdateMeshHeights(Material material, float minHeight, float maxHeight)
+    {
+        savedMinHeight = minHeight;
+        savedMaxHeight = maxHeight;
+
         material.SetFloat("minHeight", minHeight);
         material.SetFloat("maxHeight", maxHeight);
     }
