@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class FalloffGenerator : MonoBehaviour
+public static class FalloffGenerator
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static float[,] GenerateFalloffMap(int size)
     {
-        
+        float[,] map = new float[size, size];
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                float x = Mathf.Abs(i / (float)size * 2 - 1);
+                float y = Mathf.Abs(j / (float)size * 2 - 1);
+                float value = Mathf.Max(x, y);
+                map[i, j] = Evaluate(value);
+            }
+        }
+        return map;
     }
 
-    // Update is called once per frame
-    void Update()
+    static float Evaluate(float value)
     {
-        
+        float a = 3;
+        float b = 2.2f;
+        return Mathf.Pow(value, a) / (Mathf.Pow(value, a) + Mathf.Pow(b - b * value, a));
     }
 }
