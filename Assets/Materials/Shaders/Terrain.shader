@@ -22,9 +22,14 @@ Shader "Custom/Terrain" {
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
+            TEXTURE2D(testTexture);
+            SAMPLER(sampler_testTexture);
+            TEXTURE2D_ARRAY(baseTextures);
+            SAMPLER(sampler_baseTextures);
+
+            // Arrays CANNOT go in CBUFFER — leave them outside
             const static int maxLayerCount = 8;
             const static float epsilon = 1E-4;
-
             int layerCount;
             float3 baseColours[maxLayerCount];
             float baseStartHeights[maxLayerCount];
@@ -32,15 +37,12 @@ Shader "Custom/Terrain" {
             float baseColourStrength[maxLayerCount];
             float baseTextureScales[maxLayerCount];
 
-            float minHeight;
-            float maxHeight;
-
-            TEXTURE2D(testTexture);
-            SAMPLER(sampler_testTexture);
-            float testScale;
-
-            TEXTURE2D_ARRAY(baseTextures);
-            SAMPLER(sampler_baseTextures);
+            // Scalars MUST go inside CBUFFER for SRP Batcher
+            CBUFFER_START(UnityPerMaterial)
+                float minHeight;
+                float maxHeight;
+                float testScale;
+            CBUFFER_END
 
             struct Attributes {
                 float4 positionOS : POSITION;
@@ -101,7 +103,9 @@ Shader "Custom/Terrain" {
 
                     colour = colour * (1 - drawStrength) + (baseColour + textureColour) * drawStrength;
                 }
-
+                //return half4(heightPercent, heightPercent, heightPercent, 1.0);
+                //return half4(layerCount / 9.0, 0, 0, 1);
+                //return half4(heightPercent, heightPercent, heightPercent, 1);
                 return half4(colour, 1.0);
             }
 
