@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f0c06a98f328744a27f7a5d6fa251c, type: 3}
   m_Name: TutorialTexture
   m_EditorClassIdentifier: Assembly-CSharp::TextureData
-  autoUpdate: 1
+  autoUpdate: 0
