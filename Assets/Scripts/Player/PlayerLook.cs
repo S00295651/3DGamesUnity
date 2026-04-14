@@ -4,48 +4,82 @@ using UnityEngine.InputSystem;
 [DisallowMultipleComponent]
 public class PlayerLook : MonoBehaviour
 {
-    private Vector2 lookInput;
-    private float mouseX;
-    private float mouseY;
-    private float xRotation;
+    // parameters
+    public Transform cameraTransform;
 
-    [Header("Settings")]
-    [SerializeField] private Camera playerCamera;
-    [SerializeField] protected float HorizontalSensitivity = 10;
-    [SerializeField] protected float VerticalSensitivity = 10;
-    [SerializeField] private bool IsCursorVisible = true;
+    public float mouseSensitivity = 2f;
 
-    private void Awake()
+    [Range(-90f, 0f)]
+    public float minPitch = -85f;
+
+    [Range(0f, 90f)]
+    public float maxPitch = 85f;
+    
+    [Range(0f, 0.2f)]
+    public float smoothTime = 0f;
+
+    // private variables
+    float _pitch = 0f;
+    float _yaw = 0f;
+
+    Vector2 _smoothVelocity;
+    Vector2 _currentMouseDelta;
+    Vector2 _targetMouseDelta;
+
+    // unity
+    void Awake()
     {
-        Cursor.visible = IsCursorVisible;
+        // Auto-assign if not set
+        if (cameraTransform == null)
+            cameraTransform = GetComponentInChildren<Camera>()?.transform;
+
+        // hide cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    private void OnEnable()
+    void Update()
     {
-        InputManager.Actions.Game.Look.performed += OnLook;
-    }
+        _targetMouseDelta = new Vector2(
+            Input.GetAxisRaw("Mouse X"),
+            Input.GetAxisRaw("Mouse Y")
+        );
 
-    private void OnDisable()
-    {
-        InputManager.Actions.Game.Look.performed -= OnLook;
-    }
+        if (smoothTime > 0.001f)
+        {
+            _currentMouseDelta = Vector2.SmoothDamp(
+                _currentMouseDelta,
+                _targetMouseDelta,
+                ref _smoothVelocity,
+                smoothTime
+            );
+        }
+        else
+        {
+            _currentMouseDelta = _targetMouseDelta;
+        }
 
-    public void OnLook(InputAction.CallbackContext obj)
-    {
-        lookInput = obj.ReadValue<Vector2>();
+        _yaw += _currentMouseDelta.x * mouseSensitivity;
+        _pitch -= _currentMouseDelta.y * mouseSensitivity;
+        _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
 
-        UpdateLook();
-    }
+        transform.localRotation = Quaternion.Euler(0f, _yaw, 0f);
 
-    protected virtual void UpdateLook()
-    {
-        mouseX = lookInput.x * HorizontalSensitivity * Time.deltaTime;
-        mouseY = lookInput.y * VerticalSensitivity * Time.deltaTime;
+        if (cameraTransform != null)
+            cameraTransform.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
 
-        transform.Rotate(Vector3.up * mouseX);
+        // unlock cursor with Escape
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        playerCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        // lock cursor on left click if not already locked
+        if (Input.GetMouseButtonDown(0) && Cursor.lockState == CursorLockMode.None)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 }
