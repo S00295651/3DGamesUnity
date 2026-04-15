@@ -53,7 +53,7 @@ Material:
     - _baseStartHeight8: 0
     - _baseStartHeight9: 0
     - _maxArrayLength: 0
-    - _maxHeight: 162.08
+    - _maxHeight: 180
     - _minHeight: 0
     m_Colors:
     - _baseColor0: {r: 0, g: 0.15567541, b: 1, a: 1}

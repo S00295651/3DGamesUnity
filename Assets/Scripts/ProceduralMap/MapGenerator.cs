@@ -42,6 +42,7 @@ public class MapGenerator : MonoBehaviour
     void OnTextureValuesUpdated()
     {
         textureData.ApplyToMaterial(terrainMaterial);
+        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
     }
 
     public int mapChunkSize {
@@ -58,6 +59,11 @@ public class MapGenerator : MonoBehaviour
     }
 
     // Methods
+    void Start()
+    {
+        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
+    }
+
     public void DrawMapInEditor()
     {
         MapData mapData = GenerateMapData(Vector2.zero);
@@ -140,7 +146,7 @@ public class MapGenerator : MonoBehaviour
     MapData GenerateMapData(Vector2 centre)
     {
         float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize + 2, mapChunkSize + 2, noiseData.seed, noiseData.noiseScale,
-            noiseData.octaves, noiseData.persistance, noiseData.lacunarity, centre + noiseData.offset, noiseData.normalizeMode);
+        noiseData.octaves, noiseData.persistance, noiseData.lacunarity, centre + noiseData.offset, noiseData.normalizeMode);
 
         if (terrainData.useFalloff)
         {
@@ -148,21 +154,14 @@ public class MapGenerator : MonoBehaviour
             {
                 falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize + 2);
             }
-
-            for (int y = 0; y < mapChunkSize+2; y++)
+            for (int y = 0; y < mapChunkSize + 2; y++)
             {
-                for (int x = 0; x < mapChunkSize+2; x++)
+                for (int x = 0; x < mapChunkSize + 2; x++)
                 {
-                    if (terrainData.useFalloff)
-                    {
-                        noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
-                    }
+                    noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
                 }
             }
         }
-
-        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
-
         return new MapData(noiseMap);
     }
 

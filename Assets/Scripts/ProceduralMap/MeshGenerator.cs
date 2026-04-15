@@ -152,7 +152,7 @@ public class MeshData
             vertexNormals[vertexIndexC] += triangleNormal;
         }
 
-        int borderTriangleCount = borderTriangles.Length / 3;
+        int borderTriangleCount = borderTriangleIndex / 3;
         for (int i = 0; i < borderTriangleCount; i++)
         {
             int normalTriangleIndex = i * 3;

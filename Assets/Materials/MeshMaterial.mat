@@ -41,7 +41,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _Height: 1.1
     - _QueueControl: 0
+    - _Smoothness: 0.01
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
