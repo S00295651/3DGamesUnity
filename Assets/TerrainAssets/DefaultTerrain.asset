@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultTerrain
   m_EditorClassIdentifier: Assembly-CSharp::TerrainData
   autoUpdate: 1
-  uniformScale: 5
+  uniformScale: 3
   useFlatShading: 0
   useFalloff: 0
   meshHeightMultiplier: 42
