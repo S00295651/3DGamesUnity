@@ -13,3 +13,39 @@ MonoBehaviour:
   m_Name: TutorialTexture
   m_EditorClassIdentifier: Assembly-CSharp::TextureData
   autoUpdate: 0
+  layers:
+  - name: Water
+    texture: {fileID: 2800000, guid: 62af97c371df20d4bac2cd54c692e4ab, type: 3}
+    tint: {r: 0, g: 0.5021298, b: 1, a: 0}
+    tintStrength: 0
+    startHeight: 0
+    blendStrength: 0
+    textureScale: 0
+  - name: Sand
+    texture: {fileID: 2800000, guid: 37179a598ab2973479cab2f096f771c6, type: 3}
+    tint: {r: 0.7924528, g: 0.6907449, b: 0, a: 0}
+    tintStrength: 0
+    startHeight: 0.088
+    blendStrength: 0
+    textureScale: 0
+  - name: Grass
+    texture: {fileID: 2800000, guid: 2bb563be12593324eba9450207e545d9, type: 3}
+    tint: {r: 0, g: 0.6855345, b: 0.12292635, a: 0}
+    tintStrength: 0
+    startHeight: 0.108
+    blendStrength: 0.078
+    textureScale: 0
+  - name: Stone
+    texture: {fileID: 2800000, guid: a3874ee0616ff0c4ca98cd472fb8ebdf, type: 3}
+    tint: {r: 0.3962264, g: 0.30290323, b: 0.013705899, a: 0}
+    tintStrength: 0
+    startHeight: 0.333
+    blendStrength: 0.127
+    textureScale: 0
+  - name: Snow
+    texture: {fileID: 2800000, guid: 9b74a3c24e93a3d46b6f5e63a847716f, type: 3}
+    tint: {r: 0.87106913, g: 1, b: 0.9734398, a: 0}
+    tintStrength: 0
+    startHeight: 0.9
+    blendStrength: 0.402
+    textureScale: 0
