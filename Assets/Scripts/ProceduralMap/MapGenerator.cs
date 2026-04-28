@@ -58,6 +58,18 @@ public class MapGenerator : MonoBehaviour
     }
 
     // Methods
+    void Awake()
+    {
+        Debug.Log($"minHeight: {terrainData.minHeight}, maxHeight: {terrainData.maxHeight}");
+
+        textureData.UpdateMeshHeights(terrainMaterial,
+        terrainData.minHeight,
+        terrainData.maxHeight);
+
+        textureData.ApplyToMaterial(terrainMaterial);
+    }
+
+
     public void DrawMapInEditor()
     {
         MapData mapData = GenerateMapData(Vector2.zero);
@@ -161,7 +173,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
+        //textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
 
         return new MapData(noiseMap);
     }
