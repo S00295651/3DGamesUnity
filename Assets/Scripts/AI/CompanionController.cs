@@ -8,6 +8,11 @@ public class CompanionController : AIController
     private bool isFollowing = false;
     private Vector3 lastKnownPlayerPosition;
 
+    public float baseSpeed = 3.5f;
+    public float maxSpeed = 30f;
+    public float growthRate = 0.01f;
+    private float elapsedTime = 0f;
+
     private void OnEnable()
     {
         OnReachedDestination += HandleReachedDestination;
@@ -21,6 +26,12 @@ public class CompanionController : AIController
     private void HandleReachedDestination()
     {
         isFollowing = false;
+    }
+
+    private void UpdateSpeed()
+    {
+        elapsedTime += Time.deltaTime;
+        agent.speed = maxSpeed - (maxSpeed - baseSpeed) * Mathf.Exp(-growthRate * elapsedTime);
     }
 
     private void HandleFollowThreshold(float distanceToPlayer)
@@ -50,6 +61,8 @@ public class CompanionController : AIController
         base.Update();
 
         if (playerTransform == null) return;
+
+        UpdateSpeed();
 
         float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         HandleFollowThreshold(distanceToPlayer);

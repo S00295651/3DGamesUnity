@@ -7,6 +7,7 @@ public class Speedometer : MonoBehaviour
     public PlayerMovement playerMovement;
     public VisualEffect speedEffect;
     public TMP_Text speedText;
+    public TMP_Text maxSpeedText;
 
     public float displayMultiplier = 100f;
 
@@ -14,6 +15,7 @@ public class Speedometer : MonoBehaviour
     public float radiusMin = 0.6f;
     public float speedThreshold = 1500f;
     public float halfSpeed = 6000f;
+    public float maxSpeed = -1f;
 
     void Update()
     {
@@ -40,6 +42,16 @@ public class Speedometer : MonoBehaviour
         float radius = Mathf.Lerp(radiusMin, radiusAtZero, t);
 
         speedEffect.SetFloat("Radius", radius);
-        speedText.text = Mathf.RoundToInt(speed).ToString();
+
+        if (maxSpeed < Mathf.RoundToInt(speed)) // save max speed
+        {
+            maxSpeed = Mathf.RoundToInt(speed);
+        }
+
+        string suffix = "Current Speed : ";
+        speedText.text = suffix + Mathf.RoundToInt(speed).ToString();
+
+        suffix = "Max Speed : ";
+        maxSpeedText.text = suffix + Mathf.RoundToInt(maxSpeed).ToString();
     }
 }

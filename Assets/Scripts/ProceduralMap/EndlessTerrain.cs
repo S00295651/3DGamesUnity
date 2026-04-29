@@ -1,5 +1,9 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
+using Unity.AI.Navigation;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class EndlessTerrain : MonoBehaviour
 {
@@ -73,6 +77,46 @@ public class EndlessTerrain : MonoBehaviour
         }
     }
 
+    public IEnumerator BakeNavMeshAsync(NavMeshSurface surface, GameObject chunkObject)
+    {
+        MeshCollider collider = chunkObject.GetComponent<MeshCollider>();
+        if (collider == null || collider.sharedMesh == null) yield break;
+
+        Bounds bounds = collider.bounds;
+
+        List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
+        List<NavMeshBuildMarkup> markups = new List<NavMeshBuildMarkup>();
+
+        NavMeshBuilder.CollectSources(
+            bounds,
+            surface.layerMask,
+            surface.useGeometry,
+            surface.defaultArea,
+            markups,
+            sources
+        );
+
+        if (surface.navMeshData == null)
+        {
+            surface.navMeshData = new NavMeshData(surface.agentTypeID);
+            surface.AddData();
+        }
+
+        AsyncOperation asyncBake = NavMeshBuilder.UpdateNavMeshDataAsync(
+            surface.navMeshData,
+            surface.GetBuildSettings(),
+            sources,
+            bounds
+        );
+
+        while (!asyncBake.isDone)
+        {
+            yield return null;
+        }
+
+        surface.UpdateNavMesh(surface.navMeshData);
+    }
+
     public class TerrainChunk
     {
         public Vector2 position;
@@ -92,6 +136,8 @@ public class EndlessTerrain : MonoBehaviour
 
         int previousLODIndex = -1;
 
+        NavMeshSurface navMeshSurface;
+
         public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material)
         {
             this.detailLevels = detailLevels;
@@ -109,6 +155,10 @@ public class EndlessTerrain : MonoBehaviour
             meshObject.transform.position = positionV3 * mapGenerator.terrainData.uniformScale;
             meshObject.transform.parent = parent;
             meshObject.transform.localScale = Vector3.one * mapGenerator.terrainData.uniformScale;
+
+            navMeshSurface = meshObject.AddComponent<NavMeshSurface>();
+            navMeshSurface.collectObjects = CollectObjects.Children;
+            navMeshSurface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
 
             SetVisible(false);
 
@@ -194,6 +244,22 @@ public class EndlessTerrain : MonoBehaviour
                     else if (!collisionLODMesh.hasRequestedMesh)
                     {
                         collisionLODMesh.RequestMesh(mapData);
+                    }
+                }
+            }
+
+            if (collisionLODMesh.hasMesh)
+            {
+                bool colliderWasEmpty = meshCollider.sharedMesh == null;
+                meshCollider.sharedMesh = collisionLODMesh.mesh;
+
+                // Bake asynchrone 
+                if (colliderWasEmpty)
+                {
+                    EndlessTerrain terrainManager = meshObject.transform.parent.GetComponent<EndlessTerrain>();
+                    if (terrainManager != null)
+                    {
+                        terrainManager.StartCoroutine(terrainManager.BakeNavMeshAsync(navMeshSurface, meshObject));
                     }
                 }
             }
