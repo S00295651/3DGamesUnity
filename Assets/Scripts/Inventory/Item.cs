@@ -1,7 +1,7 @@
 using NUnit;
 using UnityEngine;
 
-public class Item : MonoBehaviour,IInteractable
+public class Item : MonoBehaviour
 {
     [SerializeField] private string itemName;
     public ParticleSystem pickupEffect;
@@ -30,23 +30,28 @@ public class Item : MonoBehaviour,IInteractable
         return true; 
     }
 
-    public void Interact(GameObject interactor)
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"try to pickup {gameObject.name} by {interactor.name}");
+        if (!other.CompareTag("Player")) return;
 
-        if (interactor.TryGetComponent<Inventory>(out Inventory inventory))
+        Debug.Log($"Trying to pick up {gameObject.name} by {other.name}");
+
+        if (other.TryGetComponent<Inventory>(out Inventory inventory))
         {
             inventory.AddItem(itemToGive);
 
-            pickupEffect.transform.parent = null;
-            pickupEffect.Play();
-
-            var main = pickupEffect.main;
-            main.stopAction = ParticleSystemStopAction.Destroy;
+            if (pickupEffect != null)
+            {
+                pickupEffect.transform.parent = null;
+                pickupEffect.Play();
+                var main = pickupEffect.main;
+                main.stopAction = ParticleSystemStopAction.Destroy;
+            }
 
             Destroy(gameObject);
         }
     }
+
     void LateUpdate()
     {
         if (player == null) return;
