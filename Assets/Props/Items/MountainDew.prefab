@@ -5072,10 +5072,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3423036613026761562}
-    - targetCorrespondingSourceObject: {fileID: -6689036041284674117, guid: 84cb361bdbda5cd41855c18a7f5720a6,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 35980848411180987}
   m_SourcePrefab: {fileID: -5645937942226959685, guid: 84cb361bdbda5cd41855c18a7f5720a6,
     type: 3}
 --- !u!1 &8866352280014629959 stripped
@@ -5099,7 +5095,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -5154,18 +5150,6 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &35980848411180987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8866352280014629959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f36e02eb6d5efa24bbf049ec519cb919, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugInteracable
 --- !u!4 &9124393936898795020 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2774220344278030320, guid: 84cb361bdbda5cd41855c18a7f5720a6,
