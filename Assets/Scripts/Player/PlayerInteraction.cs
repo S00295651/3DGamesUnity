@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerInteraction : MonoBehaviour
 {
     public Transform CameraTransform;
-    public float InteractionDistance = 3f;
+    public float InteractionDistance = 100f;
+    public float detectionRadius = 0.5f;
     public LayerMask InteractionLayers;
 
     private RaycastHit raycastHit;
@@ -29,8 +30,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void CastRay()
     {
-        if (Physics.Raycast(
+        if (Physics.SphereCast(
             CameraTransform.position,
+            detectionRadius,
             CameraTransform.forward,
             out raycastHit,
             InteractionDistance,

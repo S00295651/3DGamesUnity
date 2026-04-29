@@ -7,6 +7,24 @@ public class Item : MonoBehaviour,IInteractable
     public ParticleSystem pickupEffect;
     public ItemData itemToGive;
 
+    private Transform player;
+    public float minAngle = -30f;
+    public float maxAngle = 30f;
+
+    void Start()
+    {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.LogWarning("no object with tag player found");
+        }
+    }
+
     public bool CanInteractWith(GameObject interactor)
     {
         return true; 
@@ -28,5 +46,21 @@ public class Item : MonoBehaviour,IInteractable
 
             Destroy(gameObject);
         }
+    }
+    void LateUpdate()
+    {
+        if (player == null) return;
+
+        Vector3 direction = player.position - transform.position;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        Vector3 angles = targetRotation.eulerAngles;
+        float x = angles.x;
+        if (x > 180) x -= 360;
+
+        x = Mathf.Clamp(x, minAngle, maxAngle);
+
+        transform.rotation = Quaternion.Euler(x, angles.y, 0);
     }
 }

@@ -176,15 +176,26 @@ public class EndlessTerrain : MonoBehaviour
                 {
                     if (collisionLODMesh.hasMesh)
                     {
-                        meshCollider.sharedMesh = collisionLODMesh.mesh;
+                        if (meshCollider.sharedMesh == null)
+                        {
+                            meshCollider.sharedMesh = collisionLODMesh.mesh;
+
+                            if (ItemSpawner.Instance != null)
+                                ItemSpawner.Instance.SpawnItemsOnChunk(
+                                    position,
+                                    mapData,
+                                    (int)bounds.size.x,
+                                    mapGenerator.terrainData.uniformScale,
+                                    mapGenerator.terrainData.meshHeightCurve,
+                                    mapGenerator.terrainData.meshHeightMultiplier
+                                );
+                        }
                     }
                     else if (!collisionLODMesh.hasRequestedMesh)
                     {
                         collisionLODMesh.RequestMesh(mapData);
                     }
                 }
-
-                terrainChunksVisibleLastUpdate.Add(this);
             }
 
             SetVisible(visible);
