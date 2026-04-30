@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DefaultNoise
   m_EditorClassIdentifier: Assembly-CSharp::NoiseData
   autoUpdate: 0
-  normalizeMode: 0
-  noiseScale: 40
+  normalizeMode: 1
+  noiseScale: 80
   octaves: 2
   persistance: 0.3
   lacunarity: 2
