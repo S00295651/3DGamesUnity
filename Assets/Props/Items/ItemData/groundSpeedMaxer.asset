@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5df9420df1d3e4c88d008dac69c141, type: 3}
   m_Name: groundSpeedMaxer
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Shoes
+  itemName: Monster
   affectedStat: 0
   attributeBoost: 0.1

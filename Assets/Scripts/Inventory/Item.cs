@@ -19,10 +19,6 @@ public class Item : MonoBehaviour
         {
             player = playerObj.transform;
         }
-        else
-        {
-            Debug.LogWarning("no object with tag player found");
-        }
     }
 
     public bool CanInteractWith(GameObject interactor)
@@ -36,9 +32,13 @@ public class Item : MonoBehaviour
 
         Debug.Log($"Trying to pick up {gameObject.name} by {other.name}");
 
-        if (other.TryGetComponent<Inventory>(out Inventory inventory))
+        Inventory inventory = other.GetComponentInParent<Inventory>();
+        if (inventory != null)
         {
             inventory.AddItem(itemToGive);
+
+            if (PickupNotification.Instance != null)
+                PickupNotification.Instance.Show(itemToGive);
 
             if (pickupEffect != null)
             {
@@ -50,11 +50,20 @@ public class Item : MonoBehaviour
 
             Destroy(gameObject);
         }
+        else
+        {
+            Debug.Log($"Player {other.name} does not have an Inventory component");
+        }
     }
 
     void LateUpdate()
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+            return;
+        }
 
         Vector3 direction = player.position - transform.position;
 

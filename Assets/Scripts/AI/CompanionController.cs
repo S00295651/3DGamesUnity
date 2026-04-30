@@ -56,6 +56,12 @@ public class CompanionController : AIController
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        GameOverScreen.Instance?.Show();
+    }
     protected override void Update()
     {
         base.Update();

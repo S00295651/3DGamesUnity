@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -156,6 +155,8 @@ public class EndlessTerrain : MonoBehaviour
             meshObject.transform.parent = parent;
             meshObject.transform.localScale = Vector3.one * mapGenerator.terrainData.uniformScale;
 
+            meshObject.layer = LayerMask.NameToLayer("Environment");
+
             navMeshSurface = meshObject.AddComponent<NavMeshSurface>();
             navMeshSurface.collectObjects = CollectObjects.Children;
             navMeshSurface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
@@ -261,6 +262,10 @@ public class EndlessTerrain : MonoBehaviour
                     {
                         terrainManager.StartCoroutine(terrainManager.BakeNavMeshAsync(navMeshSurface, meshObject));
                     }
+
+                    // Notify Loading Screen
+                    if (LoadingScreen.Instance != null)
+                        LoadingScreen.Instance.OnChunkReady();
                 }
             }
 
