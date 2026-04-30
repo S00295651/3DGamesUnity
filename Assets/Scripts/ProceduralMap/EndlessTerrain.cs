@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -110,6 +111,7 @@ public class EndlessTerrain : MonoBehaviour
 
         while (!asyncBake.isDone)
         {
+            Thread.Sleep(10);
             yield return null;
         }
 

@@ -18,13 +18,10 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("high = quick stop, low = slide")]
     public float friction = 8f;
 
-    [Header("Jump")]
     public float jumpForce = 8f;
 
-    [Tooltip("hold space to bunny hop")]
     public bool autoHop = true;
 
-    [Header("Air Control")]
     public bool enableAirControl = true;
 
     [Tooltip("0 = none, 1 = full air control")]
@@ -208,10 +205,8 @@ public class PlayerMovement : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        // Relative au Transform du joueur (qui tourne avec la souris en Y)
         Vector3 dir = transform.right * h + transform.forward * v;
 
-        // Clamp magnitude à 1 (diagonale)
         if (dir.magnitude > 1f) dir.Normalize();
 
         return dir;
